@@ -1,19 +1,40 @@
-pipeline {
+pipeline{
     agent any
+    
     stages {
-        stage('Example Build') {
+        stage ('Compile Stage') {
+        
             steps {
-                echo 'Hello World'
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn clean compile'
+            
+                }
             }
         }
-        stage('Example Deploy') {
-            when {
-                branch 'master'
-            }
+        
+        stage ('Testing Stage') { 
+        
+            
             steps {
-                echo 'Deploying'
-            }
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn test'
+            
+                }
+        
         }
     }
+        
+        stage ('Deploy Stage') {
+        
+            
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn deploy'
+            
+                }
+            }
+        }
+        
+     }
+    
 }
-
